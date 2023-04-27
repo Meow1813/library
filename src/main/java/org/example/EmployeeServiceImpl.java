@@ -1,5 +1,7 @@
 package org.example;
 
+import org.apache.commons.lang3.StringUtils;
+import org.example.Exception.EmployeeInvalidNameException;
 import org.springframework.stereotype.Service;
 import org.example.Exception.EmployeeAlreadyAddedException;
 import org.example.Exception.EmployeeNotFoundException;
@@ -18,6 +20,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public String addEmployee(String firstName, String lastName, int department, int salary) { //добавление сотрудника
         Employee newEmployee = new Employee(firstName, lastName, department, salary);
+        if(!StringUtils.isAlpha(newEmployee.getFirstName() + newEmployee.getLastName())) {
+            throw new EmployeeInvalidNameException();
+        }
+        newEmployee.setFirstName(StringUtils.capitalize(newEmployee.getFirstName()));
+        newEmployee.setLastName(StringUtils.capitalize(newEmployee.getLastName()));
         if (employees.containsKey(getKey(newEmployee))) {
             throw new EmployeeAlreadyAddedException();
         }
